@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="squil" default="test" basedir=".">
+    <property environment="env"/>
+    <property name="src" location="src"/>
+    <property name="classes" location="classes"/>
+
+    <property name="test-src" location="test"/>
+    <property name="test-classes" location="test-classes"/>
+    <property name="test-results" location="test-results"/>
+
+    <property name="lib" location="lib"/>
+
+    <property name="debug" value="on"/>
+
+    <path id="compile.classpath">
+        <pathelement location="${classes}"/>
+        <fileset dir="${lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="test.classpath">
+        <pathelement location="${classes}"/>
+        <pathelement location="${test-classes}"/>
+        <fileset dir="${lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <!--  Create the time stamp -->
+        <tstamp/>
+        <!--  Create the classes directory -->
+        <mkdir dir="${classes}"/>
+        <mkdir dir="${test-classes}"/>
+        <mkdir dir="${test-results}"/>
+    </target>
+
+    <target name="compile" description="Compile Source code" depends="init">
+        <javac srcdir="${src}" destdir="${classes}" debug="${debug}" deprecation="true" source="1.5">
+            <classpath refid="compile.classpath"/>
+        </javac>
+    </target>
+
+    <target name="compile-tests" depends="compile" description="Compiles the test classes">
+        <javac srcdir="${test-src}" destdir="${test-classes}" debug="${debug}" deprecation="true" source="1.5">
+            <classpath refid="compile.classpath"/>
+        </javac>
+    </target>
+
+    <target name="test" depends="compile-tests" description="Run Junit tests">
+        <junit dir="${basedir}" fork="true" printsummary="yes" haltonfailure="yes" haltonerror="yes" showoutput="yes">
+            <classpath refid="test.classpath"/>
+
+            <batchtest fork="yes" haltonfailure="no" haltonerror="no"
+                       failureproperty="test-failure" errorproperty="test-error"
+                       todir="test-results">
+                <formatter type="plain" usefile="false"/>
+                <formatter type="plain"/>
+                <formatter type="xml"/>
+                <fileset dir="test">
+                    <include name="**/Test*"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <junitreport todir="${test-results}">
+            <fileset dir="${test-results}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${test-results}/html/junit"/>
+        </junitreport>
+        <condition property="tests-failed">
+            <or>
+                <isset property="test-error"/>
+                <isset property="test-failure"/>
+            </or>
+        </condition>
+        <fail message="One or more of the tests failed" if="tests-failed"/>
+    </target>
+
+    <target name="clean" description="Clean up directories">
+        <!--  Delete the classes Directory -->
+        <delete dir="${classes}"/>
+        <delete dir="${test-classes}" />
+        <delete dir="${test-results}" />
+    </target>
+</project>
