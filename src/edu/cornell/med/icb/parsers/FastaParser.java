@@ -1,4 +1,22 @@
-package edu.cornell.med.icb.squil.parsers;
+/*
+ * Copyright (C) 2007 Institute for Computational Biomedicine,
+ *                    Weill Medical College of Cornell University
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package edu.cornell.med.icb.parsers;
 
 import it.unimi.dsi.mg4j.io.FastBufferedReader;
 import it.unimi.dsi.mg4j.util.MutableString;
@@ -16,23 +34,25 @@ import java.io.Reader;
  *         Date: Oct 25, 2006
  *         Time: 6:09:57 PM
  */
-public class FastaParser {
-    FastBufferedReader reader;
+public final class FastaParser {
+    private FastBufferedReader reader;
     private boolean hasNext;
-    private String validProteinResidues = "ABCDEFGHIKLMNPQRSTVWY-XZ";
+    private final String validProteinResidues = "ABCDEFGHIKLMNPQRSTVWY-XZ";
+    private MutableString line = new MutableString();
 
     /**
      * Create a parser to read sequences.
      *
      * @param fastaFileSource The reader over the Fasta-formatted data.
      */
-    public FastaParser(Reader fastaFileSource) throws IOException {
+    public FastaParser(final Reader fastaFileSource) throws IOException {
         this();
         setReader(fastaFileSource);
         hasNext = readNextDescriptionLine(reader);
     }
 
     public FastaParser() {
+        super();
         previousDescriptionLine = new MutableString();
     }
 
@@ -41,7 +61,7 @@ public class FastaParser {
      *
      * @param reader
      */
-    public void setReader(Reader reader) {
+    public void setReader(final Reader reader) {
         this.reader = new FastBufferedReader(reader);
     }
 
@@ -66,7 +86,8 @@ public class FastaParser {
      * @return True if hasNext() is true, False otherwise.
      * @throws IOException
      */
-    public boolean next(MutableString descriptionLine, MutableString residues) throws IOException {
+    public boolean next(final MutableString descriptionLine,
+                        final MutableString residues) throws IOException {
         if (!hasNext) {
             return false;
         } else {
@@ -82,7 +103,8 @@ public class FastaParser {
      *
      * @param descriptionLine
      */
-    public void guessAccessionCode(CharSequence descriptionLine, MutableString accessionCode) {
+    public void guessAccessionCode(final CharSequence descriptionLine,
+                                   final MutableString accessionCode) {
         accessionCode.setLength(0);
         int startIndex = 0;
         if (descriptionLine.length() > 3 &
@@ -93,7 +115,7 @@ public class FastaParser {
             startIndex = 3;
         }
         for (int i = startIndex; i < descriptionLine.length(); i++) {
-            char c = descriptionLine.charAt(i);
+            final char c = descriptionLine.charAt(i);
             if (c == ' ' || c == '\t' || c == '|') {
                 return;
             }
@@ -107,11 +129,14 @@ public class FastaParser {
      * @param rawResidues      A string that may contain any character.
      * @param filteredResidues The subset of characters that represent valid protein residue codes, in the order in which they occur in the rawResidue string.
      */
-    public void filterProteinResidues(CharSequence rawResidues, MutableString filteredResidues) {
+    public void filterProteinResidues(final CharSequence rawResidues,
+                                      final MutableString filteredResidues) {
         filteredResidues.setLength(0);
         for (int i = 0; i < rawResidues.length(); i++) {
             char residueCode = rawResidues.charAt(i);
-            if (validProteinResidues.indexOf(residueCode) == -1) continue;
+            if (validProteinResidues.indexOf(residueCode) == -1) {
+                continue;
+            }
             if (residueCode == '.') {
                 residueCode = '-';
             } else {
@@ -122,13 +147,13 @@ public class FastaParser {
 
     }
 
-    MutableString line = new MutableString();
-
-    private boolean readNextDescriptionLine(FastBufferedReader reader) throws IOException {
+    private boolean readNextDescriptionLine(final FastBufferedReader reader) throws IOException {
         for (; ;) {
             // loop until a line that starts with > if found, or the end of file is reached.
             previousDescriptionLine = reader.readLine(previousDescriptionLine);
-            if (previousDescriptionLine == null) return false;
+            if (previousDescriptionLine == null) {
+                return false;
+            }
             if (previousDescriptionLine.startsWith(">")) {
                 previousDescriptionLine = removeBracket(previousDescriptionLine);
                 return true;
@@ -137,11 +162,11 @@ public class FastaParser {
         }
     }
 
-    private MutableString removeBracket(MutableString previousDescriptionLine) {
+    private MutableString removeBracket(final MutableString previousDescriptionLine) {
         return previousDescriptionLine.substring(1, previousDescriptionLine.length());
     }
 
-    private boolean readResidues(MutableString residues) throws IOException {
+    private boolean readResidues(final MutableString residues) throws IOException {
         residues.setLength(0);
         line.setLength(0);
         for (; ;) {
@@ -158,6 +183,4 @@ public class FastaParser {
             residues.append(line);
         }
     }
-
-
 }
