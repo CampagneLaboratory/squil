@@ -72,7 +72,6 @@
                  author="true" version="true" windowtitle="Squil JavaDoc API"
                  header="Squil" packagenames="edu.cornell.med.icb.*"
                  maxmemory="990m">
-            <!-- TODO: add jdo extension source -->
             <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
             <link href="http://mg4j.dsi.unimi.it/docs/"/>
             <link href="http://fastutil.dsi.unimi.it/docs/"/>
