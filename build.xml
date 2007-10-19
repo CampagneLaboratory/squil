@@ -15,7 +15,7 @@
     <property name="config" location="config"/>
     <property name="lib" location="lib"/>
     <property name="logs" location="logs"/>
-    <property name="api-docs" location="apidoc"/>
+    <property name="javadocs" location="javadocs"/>
 
     <!-- compiler and javadoc settings -->
     <property name="debug" value="on"/>
@@ -67,8 +67,8 @@
 
     <target name="javadocs" description="Run Javadoc on all source code files">
         <!--  Create the Java doc directory -->
-        <mkdir dir="${api-docs}"/>
-        <javadoc sourcepath="${src}" destdir="${api-docs}" use="true"
+        <mkdir dir="${javadocs}"/>
+        <javadoc sourcepath="${src}" destdir="${javadocs}" use="true"
                  author="true" version="true" windowtitle="Squil JavaDoc API"
                  header="Squil" packagenames="edu.cornell.med.icb.*"
                  maxmemory="990m">
@@ -81,5 +81,4 @@
                 <![CDATA[<i>Copyright &#169; 2007 Institute for Computational Biomedicine, All Rights Reserved.</i>]]></bottom>
         </javadoc>
     </target>
-
 </project>
