@@ -16,6 +16,7 @@
     <property name="lib" location="lib"/>
     <property name="logs" location="logs"/>
     <property name="javadocs" location="javadocs"/>
+    <property name="jarfile" value="squil.jar"/>
 
     <!-- compiler and javadoc settings -->
     <property name="debug" value="on"/>
@@ -56,13 +57,12 @@
         <delete dir="${classes}"/>
         <delete dir="${javadocs}"/>
 
-        <delete file="${autojarfile}"/>
         <delete file="${jarfile}"/>
         <delete dir="${logs}"/>
     </target>
 
     <target name="cruisecontrol"
-            depends="clean, cobertura-setup, findbugs, checkstyle, test, javadocs, pmd, cpd, cobertura-report"
+            depends="clean, cobertura-setup, findbugs, checkstyle, test, jar, javadocs, pmd, cpd, cobertura-report"
             description="Run CruiseControl Build and Tests"/>
 
     <target name="javadocs" description="Run Javadoc on all source code files">
@@ -80,4 +80,19 @@
                 <![CDATA[<i>Copyright &#169; 2007 Institute for Computational Biomedicine, All Rights Reserved.</i>]]></bottom>
         </javadoc>
     </target>
+
+    <target name="jar" depends="compile" description="Create a jar file for clustering tools">
+        <jar jarfile="${jarfile}">
+            <manifest>
+                <attribute name="Specification-Title" value="Sequence Utilities (squil)"/>
+                <attribute name="Specification-Vendor"
+                           value="Institute for Computational Biomedicine (ICB), Weill Medical College of Cornell University"/>
+                <attribute name="Implementation-Version" value="${label} (${buildstamp})"/>
+                <attribute name="Implementation-Vendor"
+                           value="Institute for Computational Biomedicine (ICB), Weill Medical College of Cornell University"/>
+            </manifest>
+            <fileset dir="${classes}"/>
+        </jar>
+    </target>
+
 </project>
