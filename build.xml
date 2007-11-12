@@ -68,10 +68,10 @@
     <target name="javadocs" description="Run Javadoc on all source code files">
         <!--  Create the Java doc directory -->
         <mkdir dir="${javadocs}"/>
-        <javadoc sourcepath="${src}" destdir="${javadocs}" use="true"
-                 author="true" version="true" windowtitle="Squil JavaDoc API"
-                 header="Squil" packagenames="edu.cornell.med.icb.*"
-                 maxmemory="990m">
+        <javadoc packagenames="edu.cornell.med.*"
+                 sourcepath="${src}" destdir="${javadocs}" encoding="UTF-8"
+                 author="true" version="true" windowtitle="Squil API ${label} (${buildstamp})"
+                 header="Squil API ${label} (${buildstamp})">
             <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
             <link href="http://mg4j.dsi.unimi.it/docs/"/>
             <link href="http://fastutil.dsi.unimi.it/docs/"/>
