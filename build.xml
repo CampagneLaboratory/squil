@@ -77,7 +77,7 @@
             <link href="http://fastutil.dsi.unimi.it/docs/"/>
             <classpath refid="compile.classpath"/>
             <bottom>
-                <![CDATA[<i>Copyright &#169; 2007 Institute for Computational Biomedicine, All Rights Reserved.</i>]]></bottom>
+                <![CDATA[<i>Copyright &#169; 2007-${year} Institute for Computational Biomedicine, All Rights Reserved.</i>]]></bottom>
         </javadoc>
     </target>
 
