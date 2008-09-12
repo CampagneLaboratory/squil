@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="plink-adapter" default="test" basedir=".">
-    <tstamp>
-        <!-- current time for buildstamp purposes -->
-        <format property="buildstamp" pattern="yyyyMMddHHmmss"/>
-    </tstamp>
-    <tstamp>
-        <format property="year" pattern="yyyy"/>
-    </tstamp>
+<project name="squil" default="test" basedir=".">
+    <import file="buildsupport/build.xml"/>
 
-    <property environment="env"/>
-    <property name="src" location="src"/>
-    <property name="classes" location="classes"/>
-
-    <property name="config" location="config"/>
-    <property name="lib" location="lib"/>
-    <property name="logs" location="logs"/>
-    <property name="javadocs" location="javadocs"/>
-    <property name="jarfile" value="plink-adapter.jar"/>
+    <property name="jarfile" value="squil.jar"/>
 
     <!-- compiler and javadoc settings -->
     <property name="debug" value="on"/>
@@ -38,12 +24,7 @@
 
     <import file="testsupport/build.xml"/>
 
-    <target name="init" depends="testsupport.init">
-        <tstamp/>
-        <mkdir dir="${classes}"/>
-        <!--  Create the logs directory -->
-        <mkdir dir="${logs}"/>
-    </target>
+    <target name="init" depends="buildsupport.init, testsupport.init"/>
 
     <target name="compile" depends="init" description="compiles the source code">
         <javac srcdir="${src}" destdir="${classes}" debug="${debug}"
@@ -53,12 +34,9 @@
     </target>
 
 
-    <target name="clean" depends="testsupport.clean" description="Cleans up the directory">
-        <delete dir="${classes}"/>
+    <target name="clean" depends="buildsupport.clean, testsupport.clean" description="Cleans up the directory">
         <delete dir="${javadocs}"/>
-
         <delete file="${jarfile}"/>
-        <delete dir="${logs}"/>
     </target>
 
     <target name="cruisecontrol"
@@ -73,8 +51,7 @@
                  author="true" version="true" windowtitle="Squil API ${label} (${buildstamp})"
                  header="Squil API ${label} (${buildstamp})">
             <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
-            <link href="http://mg4j.dsi.unimi.it/docs/"/>
-            <link href="http://fastutil.dsi.unimi.it/docs/"/>
+            <link href="http://dsiutils.dsi.unimi.it/docs/"/>
             <classpath refid="compile.classpath"/>
             <bottom>
                 <![CDATA[<i>Copyright &#169; 2007-${year} Institute for Computational Biomedicine, All Rights Reserved.</i>]]></bottom>
