@@ -12,6 +12,7 @@ import it.unimi.dsi.mg4j.util.MutableString;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.io.TextIO;
+import it.unimi.dsi.io.FastBufferedReader;
 /*
  * Copyright (C) 2001-2002 Mount Sinai School of Medicine
  * Copyright (C) 2003-2008 Institute for Computational Biomedicine,
@@ -42,6 +43,9 @@ import it.unimi.dsi.fastutil.io.TextIO;
  * <LI>all-phenotypes.cov associates each sample to a phenotype, according to which input file the sample appears into.
  * The .cov file can be used with plink <a href="http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml">--make-pheno</a> option to recode phenotypes *
  *
+ * To make a basic FAM file from the results for association studies, do  awk '{print "1 "$1" 1 1 other 0"}' Control.samples > Control.fam
+
+ *
  * @author: Fabien Campagne Date: Sep 11, 2008 Time: 6:22:00 PM
  */
 public class IlluminaISelectAdapter {
@@ -54,7 +58,7 @@ public class IlluminaISelectAdapter {
     }
 
     private void process(final String[] args) {
-        allSnps=new ObjectOpenHashSet<MutableString>();
+        allSnps = new ObjectOpenHashSet<MutableString>();
         String reportFilenames[] = CLI.getOptions(args, "-i");
         if (reportFilenames.length == 0) {
             System.out.println("No input specified (-i)");
@@ -107,7 +111,7 @@ public class IlluminaISelectAdapter {
 
         ObjectSet<MutableString> snps = new ObjectOpenHashSet<MutableString>();
         ObjectSet<MutableString> samples = new ObjectOpenHashSet<MutableString>();
-        TSVReader reader = new TSVReader(new BufferedReader(new FileReader(reportFilename)));
+        TSVReader reader = new TSVReader(new FastBufferedReader(new FileReader(reportFilename)));
         while (reader.hasNext()) {
             reader.next();
             String token = reader.getString();
@@ -120,7 +124,9 @@ public class IlluminaISelectAdapter {
             String sampleId = reader.getString();
             samples.add(new MutableString(sampleId));
             String allele1 = reader.getString();
+            allele1 = allele1.replace('-', '0');
             String allele2 = reader.getString();
+            allele2 = allele2.replace('-', '0');
             lgenOut.append(String.format("1 %s %s %s %s\n", sampleId, snpId, allele1, allele2));
         }
         lgenOut.close();
@@ -129,7 +135,7 @@ public class IlluminaISelectAdapter {
         allSnps.addAll(snps);
         for (MutableString sampleId : samples) {
 
-            phenotypeOut.append(String.format("1 %s %s", sampleId, basename));
+            phenotypeOut.append(String.format("1 %s %s\n", sampleId, basename));
         }
         phenotypeOut.flush();
         samplesOut.close();
