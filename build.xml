@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="squil" default="test" basedir=".">
+<project name="plink-adapter" default="test" basedir=".">
     <tstamp>
         <!-- current time for buildstamp purposes -->
         <format property="buildstamp" pattern="yyyyMMddHHmmss"/>
@@ -16,7 +16,7 @@
     <property name="lib" location="lib"/>
     <property name="logs" location="logs"/>
     <property name="javadocs" location="javadocs"/>
-    <property name="jarfile" value="squil.jar"/>
+    <property name="jarfile" value="plink-adapter.jar"/>
 
     <!-- compiler and javadoc settings -->
     <property name="debug" value="on"/>
