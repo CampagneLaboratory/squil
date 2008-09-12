@@ -18,11 +18,12 @@
 
 package edu.cornell.med.icb.parsers;
 
-import it.unimi.dsi.mg4j.util.MutableString;
 import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.io.StringReader;
+
+import it.unimi.dsi.lang.MutableString;
 
 /**
  * @author Fabien Campagne
