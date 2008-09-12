@@ -18,15 +18,16 @@
 
 package edu.cornell.med.icb.parsers;
 
-import it.unimi.dsi.mg4j.io.FastBufferedReader;
-import it.unimi.dsi.mg4j.util.MutableString;
+
+import it.unimi.dsi.io.FastBufferedReader;
+import it.unimi.dsi.lang.MutableString;
 
 import java.io.IOException;
 import java.io.Reader;
 
 /**
  * Parse a FASTA file. In contrast to the <a href=http://icb.med.cornell.edu/apidoc/crover/edu/mssm/crover/imports/FastaReader.html">crover FastaParser</a>,
- * this class uses {@link MutableString} for efficiency, and loads sequences lazily. This means that clients can start processing sequences in a file before the
+ * this class uses {@link it.unimi.dsi.lang.MutableString} for efficiency, and loads sequences lazily. This means that clients can start processing sequences in a file before the
  * file is completely loaded. This reader can therefore process very large files without consuming more memory than is needed to process the largest sequence
  * in the file.
  *
