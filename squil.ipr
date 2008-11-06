@@ -8,6 +8,8 @@
       <customJdkName value="" />
       <maximumHeapSize value="128" />
       <properties />
+      <executeOn event="beforeRun" target="compile-tests" runConfigurationType="JUnit" runConfigurationName="TestFastaParser.testNext" />
+      <executeOn event="beforeRun" target="compile-tests" runConfigurationType="JUnit" runConfigurationName="TestFastaParser.testReaderNoDescriptionSequence" />
     </buildFile>
   </component>
   <component name="BuildJarProjectSettings">
@@ -25,7 +27,8 @@
     <option name="configuration">
       <map>
         <entry key="check-test-classes" value="false" />
-        <entry key="config-file" value="$PROJECT_DIR$\testsupport\checkstyle\config\icb_checks.xml" />
+        <entry key="config-file" value="$PROJECT_DIR$/../squil\testsupport\checkstyle\config\icb_checks.xml" />
+        <entry key="property.checkstyle.basedir" value="$PROJECT_DIR$/../squil\testsupport\checkstyle" />
       </map>
     </option>
   </component>
