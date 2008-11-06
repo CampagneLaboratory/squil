@@ -93,38 +93,24 @@ public class TestFastaParser extends TestCase {
         final String description1 = "P08100";
         final String description2 = "P1;P08100";
         final String description3 = "P1;P08100|blah";
-        final FastaParser parser = new FastaParser(new StringReader(""));
         final MutableString accessionCode = new MutableString();
 
-        parser.guessAccessionCode(description1, accessionCode);
+        FastaParser.guessAccessionCode(description1, accessionCode);
         assertEquals(new MutableString("P08100"), accessionCode);
 
-        parser.guessAccessionCode(description2, accessionCode);
+        FastaParser.guessAccessionCode(description2, accessionCode);
         assertEquals(new MutableString("P08100"), accessionCode);
 
-        parser.guessAccessionCode(description3, accessionCode);
+        FastaParser.guessAccessionCode(description3, accessionCode);
         assertEquals(new MutableString("P08100"), accessionCode);
 
-        parser.guessAccessionCode("ASDF", accessionCode);
-        assertEquals(new MutableString("ASDF"), accessionCode);
-
-        parser.guessAccessionCode("P1:P08100", accessionCode);
-        assertEquals(new MutableString("P1:P08100"), accessionCode);
-
-        parser.guessAccessionCode("P2;P08100", accessionCode);
-        assertEquals(new MutableString("P2;P08100"), accessionCode);
-
-        parser.guessAccessionCode(" P08100", accessionCode);
-        assertEquals(new MutableString(""), accessionCode);
-
-        parser.guessAccessionCode("\tP08100", accessionCode);
-        assertEquals(new MutableString(""), accessionCode);
-
-        parser.guessAccessionCode("|P08100", accessionCode);
-        assertEquals(new MutableString(""), accessionCode);
-
-        parser.guessAccessionCode("", accessionCode);
-        assertEquals(new MutableString(""), accessionCode);
+        assertEquals("ASDF", FastaParser.guessAccessionCode("ASDF"));
+        assertEquals("P1:P08100", FastaParser.guessAccessionCode("P1:P08100"));
+        assertEquals("P2;P08100", FastaParser.guessAccessionCode("P2;P08100"));
+        assertEquals("", FastaParser.guessAccessionCode(" P08100"));
+        assertEquals("", FastaParser.guessAccessionCode("\tP08100"));
+        assertEquals("", FastaParser.guessAccessionCode("|P08100"));
+        assertEquals("", FastaParser.guessAccessionCode(""));
     }
 
     /**
@@ -132,28 +118,26 @@ public class TestFastaParser extends TestCase {
      * @throws IOException if there is a problem with the reader
      */
     public void testResidueFilter() throws IOException {
-        final FastaParser parser = new FastaParser(new StringReader(""));
         final MutableString validResidueCodes = new MutableString();
 
         // all the residues here are valid, so nothing should change
         final String rawResidues = "ABCDEFGHIKLMNPQRSTVWY-XZ";
-        parser.filterProteinResidues(rawResidues, validResidueCodes);
+        FastaParser.filterProteinResidues(rawResidues, validResidueCodes);
         assertEquals(new MutableString(rawResidues), validResidueCodes);
 
         // some characters are invalid
         final String rawResidues2 = "!2378273%@*#($@ABCDEFGH369<>IKLMNPQRSTVWY-XZ";
-        parser.filterProteinResidues(rawResidues2, validResidueCodes);
+        FastaParser.filterProteinResidues(rawResidues2, validResidueCodes);
         assertEquals(new MutableString(rawResidues), validResidueCodes);
 
         // No residues in this string are valid
         final String rawResidues3 = "12345678990/,<>!?";
-        parser.filterProteinResidues(rawResidues3, validResidueCodes);
+        FastaParser.filterProteinResidues(rawResidues3, validResidueCodes);
         assertEquals(new MutableString(""), validResidueCodes);
 
         // The "." character should be replaced by a "-"
         final String rawResidues4 = "FACE.BEEF";
-        parser.filterProteinResidues(rawResidues4, validResidueCodes);
-        assertEquals(new MutableString("FACE-BEEF"), validResidueCodes);    
+        assertEquals("FACE-BEEF", FastaParser.filterProteinResidues(rawResidues4));    
     }
 
     /**
