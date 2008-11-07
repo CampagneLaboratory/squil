@@ -18,14 +18,13 @@
 
 package edu.cornell.med.icb.parsers;
 
+import it.unimi.dsi.io.FastBufferedReader;
+import it.unimi.dsi.io.NullReader;
+import it.unimi.dsi.lang.MutableString;
 import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.io.StringReader;
-
-import it.unimi.dsi.lang.MutableString;
-import it.unimi.dsi.io.FastBufferedReader;
-import it.unimi.dsi.io.NullReader;
 
 /**
  * Validates the functionality of the {@link edu.cornell.med.icb.parsers.FastaParser} class.
@@ -104,13 +103,26 @@ public class TestFastaParser extends TestCase {
         FastaParser.guessAccessionCode(description3, accessionCode);
         assertEquals(new MutableString("P08100"), accessionCode);
 
-        assertEquals("ASDF", FastaParser.guessAccessionCode("ASDF"));
-        assertEquals("P1:P08100", FastaParser.guessAccessionCode("P1:P08100"));
-        assertEquals("P2;P08100", FastaParser.guessAccessionCode("P2;P08100"));
-        assertEquals("", FastaParser.guessAccessionCode(" P08100"));
-        assertEquals("", FastaParser.guessAccessionCode("\tP08100"));
-        assertEquals("", FastaParser.guessAccessionCode("|P08100"));
-        assertEquals("", FastaParser.guessAccessionCode(""));
+        FastaParser.guessAccessionCode("ASDF", accessionCode);
+        assertEquals(new MutableString("ASDF"), accessionCode);
+
+        FastaParser.guessAccessionCode("P1:P08100", accessionCode);
+        assertEquals(new MutableString("P1:P08100"), accessionCode);
+
+        FastaParser.guessAccessionCode("P2;P08100", accessionCode);
+        assertEquals(new MutableString("P2;P08100"), accessionCode);
+
+        FastaParser.guessAccessionCode(" P08100", accessionCode);
+        assertEquals(new MutableString(""), accessionCode);
+
+        FastaParser.guessAccessionCode("\tP08100", accessionCode);
+        assertEquals(new MutableString(""), accessionCode);
+
+        FastaParser.guessAccessionCode("|P08100", accessionCode);
+        assertEquals(new MutableString(""), accessionCode);
+
+        FastaParser.guessAccessionCode("", accessionCode);
+        assertEquals(new MutableString(""), accessionCode);
     }
 
     /**
@@ -137,7 +149,8 @@ public class TestFastaParser extends TestCase {
 
         // The "." character should be replaced by a "-"
         final String rawResidues4 = "FACE.BEEF";
-        assertEquals("FACE-BEEF", FastaParser.filterProteinResidues(rawResidues4));    
+        FastaParser.filterProteinResidues(rawResidues4, validResidueCodes);
+        assertEquals(new MutableString("FACE-BEEF"), validResidueCodes);
     }
 
     /**

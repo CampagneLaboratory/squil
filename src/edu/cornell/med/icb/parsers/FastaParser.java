@@ -130,21 +130,10 @@ public final class FastaParser {
      * Try to extract an accession code from a FASTA description line.
      *
      * @param descriptionLine The line of text to parse for the accession code
-     * @return The resulting accession code or an empty string
-     */
-    public static String guessAccessionCode(final CharSequence descriptionLine) {
-        return guessAccessionCode(descriptionLine, new MutableString()).toString();
-    }
-
-    /**
-     * Try to extract an accession code from a FASTA description line.
-     *
-     * @param descriptionLine The line of text to parse for the accession code
      * @param accessionCode The location to place the resulting accession code
-     * @return The resulting accession code
      */
-    public static MutableString guessAccessionCode(final CharSequence descriptionLine,
-                                                   final MutableString accessionCode) {
+    public static void guessAccessionCode(final CharSequence descriptionLine,
+                                          final MutableString accessionCode) {
         accessionCode.setLength(0);
         final int startIndex;
         if (descriptionLine.length() > 3 && descriptionLine.charAt(0) == 'P'
@@ -161,19 +150,6 @@ public final class FastaParser {
             }
             accessionCode.append(c);
         }
-
-        return accessionCode;
-    }
-
-    /**
-     * Filter a string to keep only protein residues.
-     *
-     * @param rawResidues A string that may contain any character.
-     * codes, in the order in which they occur in the rawResidue string.
-     * @return the resulting residue codes
-     */
-    public static String filterProteinResidues(final CharSequence rawResidues) {
-        return filterProteinResidues(rawResidues, new MutableString()).toString();
     }
 
     /**
@@ -182,9 +158,8 @@ public final class FastaParser {
      * @param rawResidues A string that may contain any character.
      * @param filteredResidues The subset of characters that represent valid protein residue
      * codes, in the order in which they occur in the rawResidue string.
-     * @return the resulting residue codes
      */
-    public static MutableString filterProteinResidues(final CharSequence rawResidues,
+    public static void filterProteinResidues(final CharSequence rawResidues,
                                                       final MutableString filteredResidues) {
         filteredResidues.setLength(0);
         for (int i = 0; i < rawResidues.length(); i++) {
@@ -200,7 +175,6 @@ public final class FastaParser {
                 filteredResidues.append(residueCode);
             }
         }
-        return filteredResidues;
     }
 
     /**
