@@ -20,6 +20,8 @@ package edu.cornell.med.icb.parsers;
 
 import it.unimi.dsi.io.FastBufferedReader;
 import it.unimi.dsi.lang.MutableString;
+import it.unimi.dsi.fastutil.chars.CharSet;
+import it.unimi.dsi.fastutil.chars.CharAVLTreeSet;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -50,7 +52,8 @@ public final class FastaParser {
     /**
      * The list of valid protein sequence characters.
      */
-    private static final String VALID_PROTEIN_RESIDUES = "ABCDEFGHIKLMNPQRSTVWY-XZ";
+    private static final MutableString VALID_PROTEIN_RESIDUES =
+            new MutableString("ACTGLVISDEFHKMNPQRWBY-XZ").compact();
 
     /**
      * Used to store lines read from the FASTA sequence reader.
@@ -111,7 +114,7 @@ public final class FastaParser {
      * unspecified.
      *
      * @param descriptionLine Where the raw description line will be written.
-     * @param residues When the raw residue lines will be written.
+     * @param residues        When the raw residue lines will be written.
      * @return True if hasNext() is true, False otherwise.
      * @throws IOException if there is a problem reading from the input
      */
@@ -130,7 +133,7 @@ public final class FastaParser {
      * Try to extract an accession code from a FASTA description line.
      *
      * @param descriptionLine The line of text to parse for the accession code
-     * @param accessionCode The location to place the resulting accession code
+     * @param accessionCode   The location to place the resulting accession code
      */
     public static void guessAccessionCode(final CharSequence descriptionLine,
                                           final MutableString accessionCode) {
@@ -155,13 +158,14 @@ public final class FastaParser {
     /**
      * Filter a string to keep only protein residues.
      *
-     * @param rawResidues A string that may contain any character.
+     * @param rawResidues      A string that may contain any character.
      * @param filteredResidues The subset of characters that represent valid protein residue
-     * codes, in the order in which they occur in the rawResidue string.
+     *                         codes, in the order in which they occur in the rawResidue string.
      */
     public static void filterProteinResidues(final CharSequence rawResidues,
                                              final MutableString filteredResidues) {
-        filteredResidues.setLength(0);
+        filteredResidues.setLength(rawResidues.length());
+        int destIndex = 0;
         for (int i = 0; i < rawResidues.length(); i++) {
             char residueCode = rawResidues.charAt(i);
             if (residueCode == '.') {
@@ -171,21 +175,26 @@ public final class FastaParser {
             }
 
             // add the residue code only if it is valid
-            if (VALID_PROTEIN_RESIDUES.indexOf(residueCode) != -1) {
-                filteredResidues.append(residueCode);
+            if (VALID_PROTEIN_RESIDUES.indexOf(residueCode)!=-1) {
+
+                filteredResidues.setCharAt(destIndex, residueCode);
+                destIndex++;
             }
+
         }
+        filteredResidues.setLength(destIndex);
     }
 
     /**
      * Reade the sequence until the next description line or end of file is found.
+     *
      * @param fastBufferedReader The reader object to get lines from
      * @return true if another description line was found, false otherwise
      * @throws IOException if there was a problem with the reader
      */
     private boolean readNextDescriptionLine(final FastBufferedReader fastBufferedReader)
             throws IOException {
-        for (;;) {
+        for (; ;) {
             // loop until a line that starts with > if found, or the end of file is reached.
             previousDescriptionLine = fastBufferedReader.readLine(previousDescriptionLine);
             if (previousDescriptionLine == null) {
@@ -200,6 +209,7 @@ public final class FastaParser {
 
     /**
      * Removes the bracket character (">") from the description line.
+     *
      * @param descriptionLine The line to remove the bracket from
      * @return The resulting line without the bracket
      */
@@ -209,6 +219,7 @@ public final class FastaParser {
 
     /**
      * Read and store the residues from the current sequence.
+     *
      * @param residues The object to store the residue sequence into.
      * @return true if there are more sequences left after getting the current sequence
      * @throws IOException if there is a problem reading the sequence
@@ -216,7 +227,7 @@ public final class FastaParser {
     private boolean readResidues(final MutableString residues) throws IOException {
         residues.setLength(0);
         line.setLength(0);
-        for (;;) {
+        for (; ;) {
             line = reader.readLine(line);
             if (line == null) {
                 hasNext = false;
