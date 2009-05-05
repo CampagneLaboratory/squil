@@ -11,6 +11,9 @@
     <property name="ant.build.javac.source" value="1.5"/>
     <property name="ant.build.javac.target" value="1.5"/>
 
+    <!-- the label gets overridden by CruiseControl and/or during a release -->
+    <property name="label" value="development"/>
+
     <path id="compile.classpath">
         <fileset dir="${lib}">
             <include name="*.jar"/>
@@ -35,7 +38,6 @@
 
 
     <target name="clean" depends="buildsupport.clean, testsupport.clean" description="Cleans up the directory">
-        <delete dir="${javadocs}"/>
         <delete file="${jarfile}"/>
     </target>
 
@@ -52,6 +54,7 @@
                  header="Squil API ${label} (${buildstamp})">
             <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
             <link href="http://dsiutils.dsi.unimi.it/docs/"/>
+            <link href="http://fastutil.dsi.unimi.it/docs/"/>
             <classpath refid="compile.classpath"/>
             <bottom>
                 <![CDATA[<i>Copyright &#169; 2007-${year} Institute for Computational Biomedicine, All Rights Reserved.</i>]]></bottom>
@@ -67,6 +70,7 @@
                 <attribute name="Implementation-Version" value="${label} (${buildstamp})"/>
                 <attribute name="Implementation-Vendor"
                            value="Institute for Computational Biomedicine (ICB), Weill Medical College of Cornell University"/>
+                <attribute name="Built-By" value="${user.name}"/>
             </manifest>
             <fileset dir="${classes}"/>
         </jar>

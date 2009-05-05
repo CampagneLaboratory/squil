@@ -20,8 +20,6 @@ package edu.cornell.med.icb.parsers;
 
 import it.unimi.dsi.io.FastBufferedReader;
 import it.unimi.dsi.lang.MutableString;
-import it.unimi.dsi.fastutil.chars.CharSet;
-import it.unimi.dsi.fastutil.chars.CharAVLTreeSet;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -175,12 +173,10 @@ public final class FastaParser {
             }
 
             // add the residue code only if it is valid
-            if (VALID_PROTEIN_RESIDUES.indexOf(residueCode)!=-1) {
-
+            if (VALID_PROTEIN_RESIDUES.indexOf(residueCode) != -1) {
                 filteredResidues.setCharAt(destIndex, residueCode);
                 destIndex++;
             }
-
         }
         filteredResidues.setLength(destIndex);
     }
@@ -194,7 +190,7 @@ public final class FastaParser {
      */
     private boolean readNextDescriptionLine(final FastBufferedReader fastBufferedReader)
             throws IOException {
-        for (; ;) {
+        while (true) {
             // loop until a line that starts with > if found, or the end of file is reached.
             previousDescriptionLine = fastBufferedReader.readLine(previousDescriptionLine);
             if (previousDescriptionLine == null) {
@@ -227,7 +223,7 @@ public final class FastaParser {
     private boolean readResidues(final MutableString residues) throws IOException {
         residues.setLength(0);
         line.setLength(0);
-        for (; ;) {
+        while (true) {
             line = reader.readLine(line);
             if (line == null) {
                 hasNext = false;

@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * A parser for fasta files which supports reading sequences one character at a time. Useful for processing
- * sequences containing entire chromosomes.
+ * A parser for fasta files which supports reading sequences one character at a time.
+ * Useful for processing sequences containing entire chromosomes.
  *
  * @author Fabien Campagne
  *         Date: Nov 10, 2008
@@ -44,14 +44,9 @@ public final class ReaderFastaParser {
     private boolean hasNext;
 
     /**
-     * The list of valid protein sequence characters.
-     */
-    private static final String VALID_PROTEIN_RESIDUES = "ABCDEFGHIKLMNPQRSTVWY-XZ";
-
-    /**
      * Used to store lines read from the FASTA sequence reader.
      */
-    private MutableString line = new MutableString();
+    private final MutableString line = new MutableString();
 
     /**
      * The description line previously seen from the FASTA sequence reader.
@@ -109,9 +104,8 @@ public final class ReaderFastaParser {
      *
      * @param descriptionLine Where the raw description line will be written.
      * @return True if hasNext() is true, False otherwise.
-     * @throws java.io.IOException if there is a problem reading from the input
      */
-    public boolean nextSequence(final MutableString descriptionLine) throws IOException {
+    public boolean nextSequence(final MutableString descriptionLine) {
         if (!hasNext) {
             return false;
         } else {
@@ -161,7 +155,7 @@ public final class ReaderFastaParser {
      */
     private boolean readNextDescriptionLine(final FastBufferedReader fastBufferedReader)
             throws IOException {
-        for (; ;) {
+        while (true) {
             // loop until a line that starts with > if found, or the end of file is reached.
             previousDescriptionLine = fastBufferedReader.readLine(previousDescriptionLine);
             if (previousDescriptionLine == null) {
@@ -186,21 +180,21 @@ public final class ReaderFastaParser {
 
 
     private class OneBaseAtATimeReader extends Reader {
-        private FastBufferedReader sequenceReader;
+        private final FastBufferedReader sequenceReader;
 
-        public OneBaseAtATimeReader(FastBufferedReader reader) {
+        OneBaseAtATimeReader(final FastBufferedReader reader) {
             sequenceReader = reader;
         }
 
+        @Override
         public int read() throws IOException {
-            int c = sequenceReader.read();
+            final int c = sequenceReader.read();
             if (c == -1) {
                 hasNext = false;   // no more sequences, we just found the end of file.
                 return -1;
             } else {
-                char character = (char) c;
+                final char character = (char) c;
                 switch (character) {
-
                     case 'A':
                     case 'C':
                     case 'T':
@@ -221,12 +215,14 @@ public final class ReaderFastaParser {
             }
         }
 
-        public int read(char[] chars, int i, int i1) throws IOException {
+        @Override
+        public int read(final char[] chars, final int i, final int i1) throws IOException {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public void close() throws IOException {
-            // do nothing, we do not own the undelying reader.
+            // do nothing, we do not own the underlying reader.
         }
     }
 }

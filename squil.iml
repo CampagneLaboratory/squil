@@ -30,18 +30,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/dsiutils-1.0.6.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/fastutil-5.1.5.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="file:///../../java/dsiutils-1.0.6/src" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/fastutil-5.0.9.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/dsiutils-1.0.9.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
