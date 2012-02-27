@@ -194,23 +194,17 @@ public final class ReaderFastaParser {
                 return -1;
             } else {
                 final char character = (char) c;
-                switch (character) {
-                    case 'A':
-                    case 'C':
-                    case 'T':
-                    case 'G':
-                    case 'N':
-                    case 'U':
-                        return c;
-                    case '>':
-                        line.setLength(0);
-
-                        sequenceReader.readLine(line);
-                        previousDescriptionLine.replace(line);
-                        hasNext = true;
-                        return -1; // end of this specific sequence.
-                    default:
-                        return read();
+                if (c == '>') {
+                    line.setLength(0);
+                    sequenceReader.readLine(line);
+                    previousDescriptionLine.replace(line);
+                    hasNext = true;
+                    return -1; // end of this specific sequence.
+                } else if ((c >= '0' && c <= '6') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+                    // 0-6 for colorspace, the others for base space.
+                    return c;
+                } else {
+                    return read();
                 }
             }
         }

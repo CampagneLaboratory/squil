@@ -31,6 +31,43 @@ import java.io.StringReader;
  * Time: 9:53:24 AM
  */
 public class TestReaderFastaParser extends TestCase {
+
+    public void testSetReaderMultilineInput() throws IOException {
+        final String fasta = ">1\n" +
+                "ACTG\n" +
+                "AAAA0T\n" +
+                "AMRUAT";
+        final StringReader r = new StringReader(fasta);
+        final ReaderFastaParser p = new ReaderFastaParser(r);
+        final MutableString description = new MutableString();
+        int index = 1;
+        while (p.hasNextSequence()) {
+            p.nextSequence(description);
+            final Reader baseReader = p.getBaseReader();
+            assertEquals(new MutableString("1"), description);
+            assertEquals('A',(char)baseReader.read());
+            assertEquals('C',(char)baseReader.read());
+            assertEquals('T',(char)baseReader.read());
+            assertEquals('G',(char)baseReader.read());
+            assertEquals('A', (char)baseReader.read());
+            assertEquals('A', (char)baseReader.read());
+            assertEquals('A', (char)baseReader.read());
+            assertEquals('A', (char)baseReader.read());
+            assertEquals('0', (char)baseReader.read());
+            assertEquals('T', (char)baseReader.read());
+            assertEquals('A', (char)baseReader.read());
+            assertEquals('M', (char)baseReader.read());
+            assertEquals('R', (char)baseReader.read());
+            assertEquals('U', (char)baseReader.read());
+            assertEquals('A', (char)baseReader.read());
+            assertEquals('T', (char)baseReader.read());
+            assertEquals(-1, baseReader.read());
+            index++;
+        }
+        assertEquals("fasta file must be recognized to have 2 sequences.", 2, index);
+
+    }
+
     public void testSetReader() throws IOException {
         final String fasta = ">1\n" +
                 "ACTG\n" +
